@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>TTS 設定</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h2>🌍 言語を選択</h2>
+  <select id="languageSelect"></select>
+
+  <h2>🎙️ ナレーターを選択</h2>
+  <select id="voiceSelect"></select>
+
+  <h2>🎚️ 発話速度（文字/秒）</h2>
+  <input type="range" id="speedSlider" min="1" max="10" step="0.1" value="2.5" />
+  <span id="speedValue">2.5</span>
+
+  <button id="testButton">🔊 テスト再生</button>
+
+  <script src="popup.js"></script>
+  <p>この機能はTTS機能により､YouTubeによって自動的に生成･翻訳された字幕を読み上げています｡</p>
+  <p>完全にフリー! TTSエンジンとYouTube､そして手伝ってくれたChatGPTに敬礼(｀･ω･´)ゞ</p>
+</body>
+</html>
