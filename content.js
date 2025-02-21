@@ -1,8 +1,21 @@
 let cachedSubtitles = [];
 let tlang = "ja";
 
+
+
+
 // when the page is loaded,caching the subtitles
 window.addEventListener("load", async () => {
+    const { ttsEnabled } = await new Promise((resolve) => {
+        chrome.storage.sync.get("ttsEnabled", (data) => {
+            resolve(data);
+        });
+    });
+
+    if (!ttsEnabled) {
+        console.log("extension is disabled")
+        return;
+    }
     console.log("✅ YouTube動画が検出されました。字幕データをキャッシュします。");
     cachedSubtitles = await getSubtitles();
     playSubtitlesWithTTS(cachedSubtitles);
@@ -112,7 +125,15 @@ async function playSubtitlesWithTTS(subtitles) {
 }
 
 
-function speakText(text, duration) {
+async function speakText(text, duration) {
+    const { ttsEnabled } = await new Promise((resolve) => {
+        chrome.storage.sync.get("ttsEnabled", (data) => {
+            resolve(data);
+        });
+    });
+    if(!ttsEnabled){
+        return;
+    }
     if (speechSynthesis.speaking) {
         console.log("🚫 現在の発話が終了していません。読み上げをスキップします。");
         return;

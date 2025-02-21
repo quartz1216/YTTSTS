@@ -141,7 +141,20 @@ const translations = {
   },
 };
 
+const toggleSwitch = document.getElementById("toggleSwitch");
 
+// 🔄 スイッチの状態を読み込む
+chrome.storage.sync.get("ttsEnabled", (data) => {
+  toggleSwitch.checked = data.ttsEnabled !== false; // デフォルトはオン
+});
+
+// 🔄 スイッチの切り替えを保存
+toggleSwitch.addEventListener("change", () => {
+  isEnabled = toggleSwitch.checked;
+  chrome.storage.sync.set({ ttsEnabled: isEnabled }, () => {
+    console.log(`🔌 拡張機能が ${isEnabled ? "有効化" : "無効化"} されました。`);
+  });
+});
 
 // 🌍 UIのテキストを更新する関数
 function updateUIText(languageCode) {
