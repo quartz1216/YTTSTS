@@ -1,25 +1,155 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8" />
-  <title>TTS 設定</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>YouTube TTS 設定</title>
+  <style>
+    /* 🌟 全体のレイアウト */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      padding: 20px;
+      width: 600px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    /* 🌍 言語セレクターとナレーターセレクター */
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* 💾 保存ボタン */
+    #saveButton {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    #saveButton:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #saveButton:hover:not(:disabled) {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    /* ✅ ステータスメッセージ */
+    #statusMessage {
+      display: block;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+
+      >.git {
+        right: 0;
+      }
+    }
+
+    .section {
+      display: flex;
+      flex-wrap: wrap;
+
+      >h2 {
+        text-wrap-mode: nowrap;
+        padding-right: 24px;
+      }
+    }
+
+    /* 🌟 レスポンシブ対応 */
+
+    body {
+      padding: 15px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+
+    #saveButton {
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
-  <h2>🌍 言語を選択</h2>
-  <select id="languageSelect"></select>
 
-  <h2>🎙️ ナレーターを選択</h2>
-  <select id="voiceSelect"></select>
-
-  <h2>🎚️ 発話速度（文字/秒）</h2>
-  <input type="range" id="speedSlider" min="1" max="10" step="0.1" value="2.5" />
-  <span id="speedValue">2.5</span>
-
-  <button id="testButton">🔊 テスト再生</button>
-
+  <div class="section">
+    <h2 id="languagetitle">🌍 規定言語を選択</h2>
+    <select id="languageSelect">
+      <option value="en">English (en)</option>
+      <option value="ar">العربية (ar)</option>
+      <option value="de">Deutsch (de)</option>
+      <option value="es">Español (es)</option>
+      <option value="fr">Français (fr)</option>
+      <option value="hi">हिन्दी (hi)</option>
+      <option value="id">Bahasa Indonesia (id)</option>
+      <option value="it">Italiano (it)</option>
+      <option value="ja">日本語 (ja)</option>
+      <option value="ko">한국어 (ko)</option>
+      <option value="nl">Nederlands (nl)</option>
+      <option value="pl">Polski (pl)</option>
+      <option value="pt">Português (pt)</option>
+      <option value="ru">Русский (ru)</option>
+      <option value="sv">Svenska (sv)</option>
+      <option value="th">ไทย (th)</option>
+      <option value="tr">Türkçe (tr)</option>
+      <option value="vi">Tiếng Việt (vi)</option>
+      <option value="zh-CN">简体中文 (zh-CN)</option>
+      <option value="zh-TW">繁體中文 (zh-TW)</option>
+    </select>
+  </div>
+  <div class="section">
+    <h2 id="voicetitle">🎙️ ナレーターを選択</h2>
+    <select id="voiceSelect"></select>
+  </div>
+  <button id="saveButton">💾 保存</button>
+  <span id="statusMessage" style="margin-left: 10px; color: gray;"></span>
+  <footer>
+    <p class="title">📜 YouTube Transcript to Speech</p>
+    <a class="git" href="https://github.com/quartz1216/YTTSTS">😈 github</a>
+  </footer>
   <script src="popup.js"></script>
-  <p>この機能はブラウザのTTS機能によって､YouTubeの字幕を読み上げています｡</p>
-  <p>完全にフリー! TTSエンジン､YouTube､ChatGPTに敬礼(｀･ω･´)ゞ</p>
 </body>
+
 </html>

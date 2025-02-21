@@ -2,7 +2,7 @@ let cachedSubtitles = [];
 let tlang = "ja";
 
 // when the page is loaded,caching the subtitles
-window.addEventListener("load",async()=>{
+window.addEventListener("load", async () => {
     console.log("✅ YouTube動画が検出されました。字幕データをキャッシュします。");
     cachedSubtitles = await getSubtitles();
     playSubtitlesWithTTS(cachedSubtitles);
@@ -11,9 +11,9 @@ window.addEventListener("load",async()=>{
 });
 
 // when the video is changed,reload the page
-function observeVideoChanges(){
+function observeVideoChanges() {
     let currentUrl = location.href;
-    const observer = new MutationObserver(async() => {
+    const observer = new MutationObserver(async () => {
         if (currentUrl !== location.href) {
             currentUrl = location.href;
             window.location.reload();
@@ -24,10 +24,17 @@ function observeVideoChanges(){
 
 async function getSubtitles() {
     // find and extract request url from script tag
+    const { selectedLanguage } = await new Promise((resolve) => {
+        chrome.storage.sync.get("selectedLanguage", (data) => {
+            resolve(data);
+        });
+    });
+
+    const tlang = selectedLanguage || "ja"; // 設定されていない場合は日本語にデフォルト設定
     const extracted = [...document.querySelectorAll("script")].map(s => s.innerText).find(text => text.includes("timedtext")).match(/https:\/\/www\.youtube\.com\/api\/timedtext\?[^"]+/).toString().replace(/\\u0026/g, "&");
     const regex = /[?&]([^=]+)=([^&]+)/g;
     console.debug([...document.querySelectorAll("script")].map(s => s.innerText).find(text => text.includes("timedtext")).match(/https:\/\/www\.youtube\.com\/api\/timedtext\?[^"]+/).toString());
-    if(!extracted){
+    if (!extracted) {
         console.error("❌ 字幕リクエストURLが見つかりません！");
         return
     }
@@ -49,7 +56,7 @@ async function getSubtitles() {
     // request subtitles
     const response = await fetch(requestUrl);
     const data = await response.json();
-    if(!data||!data.events){
+    if (!data || !data.events) {
         console.error("❌ 字幕データが取得できません！");
         return
     }
@@ -107,43 +114,43 @@ async function playSubtitlesWithTTS(subtitles) {
 
 function speakText(text, duration) {
     if (speechSynthesis.speaking) {
-      console.log("🚫 現在の発話が終了していません。読み上げをスキップします。");
-      return;
+        console.log("🚫 現在の発話が終了していません。読み上げをスキップします。");
+        return;
     }
-  
+
     const utterance = new SpeechSynthesisUtterance(text);
 
     chrome.storage.sync.get("selectedVoice", (data) => {
         const voices = speechSynthesis.getVoices();
         const selectedVoice = voices.find((voice) => voice.name === data.selectedVoice);
-    
+
         if (selectedVoice) {
-          utterance.voice = selectedVoice;
-          console.log(`🗣️ 選択された音声エンジン: ${selectedVoice.name}`);
+            utterance.voice = selectedVoice;
+            console.log(`🗣️ 選択された音声エンジン: ${selectedVoice.name}`);
         } else {
-          // 🔄 デフォルトの日本語ナレーターを使用
-          const japaneseVoice = voices.find((voice) => voice.lang === "ja-JP");
-          if (japaneseVoice) {
-            utterance.voice = japaneseVoice;
-            console.log(`🗣️ デフォルト音声エンジン: ${japaneseVoice.name}`);
-          }
+            // 🔄 デフォルトの日本語ナレーターを使用
+            const japaneseVoice = voices.find((voice) => voice.lang === "ja-JP");
+            if (japaneseVoice) {
+                utterance.voice = japaneseVoice;
+                console.log(`🗣️ デフォルト音声エンジン: ${japaneseVoice.name}`);
+            }
         }
-    
+
         utterance.lang = "ja-JP";
         utterance.rate = calculateSpeechRate(text, duration);
         utterance.volume = 1.0;
         utterance.pitch = 1.0;
-    
+
         speechSynthesis.speak(utterance);
-      });
-  }
-  
-  // ⚡ 発話速度を調整
-  function calculateSpeechRate(text, availableDuration) {
+    });
+}
+
+// ⚡ 発話速度を調整
+function calculateSpeechRate(text, availableDuration) {
     const avgCharPerSec = 5;
     const estimatedTime = text.length / avgCharPerSec;
     let requiredRate = estimatedTime / availableDuration;
     requiredRate = Math.min(10.0, Math.max(0.5, requiredRate));
     console.log(`⚡ 発話速度調整: ${requiredRate.toFixed(2)}x に設定（利用可能時間: ${availableDuration.toFixed(2)}s）`);
     return requiredRate;
-  }
+}
