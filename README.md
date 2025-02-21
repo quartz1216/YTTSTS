@@ -11,7 +11,8 @@ Microsoft Edgeでは､MicrosoftのオンラインTTSを使用することがで
 
 ## 導入方法
 ### Chrome Web Store
-現在審査中 (ﾁｮｯﾄﾏｯﾃﾈ)
+~~現在審査中 (ﾁｮｯﾄﾏｯﾃﾈ)~~ できました
+https://chromewebstore.google.com/detail/yttsts/ilflijlbmblpbegcdkfjcnjojhajbmlk?hl=ja&authuser=0
 ### 手動
 1. このリポジトリをクローン､もしくはZipファイルでダウンロード&展開
 2. chrome://extensionsにアクセス
